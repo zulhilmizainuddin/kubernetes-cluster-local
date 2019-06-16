@@ -3,3 +3,4 @@
   roles:
     - geerlingguy.swap
     - docker
+    - kubebin
