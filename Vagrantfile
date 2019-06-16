@@ -4,11 +4,9 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/bionic64"
-
   config.vm.network "public_network", bridge: "wlp35s0"
 
   config.vm.define "master" do |master|
-
     master.vm.provider "virtualbox" do |vb|
       vb.cpus = "2"
       vb.memory = "2048"
@@ -19,7 +17,6 @@ Vagrant.configure("2") do |config|
 
   (1..2).each do |i|
     config.vm.define "node#{i}" do |node|
-
       node.vm.provider "virtualbox" do |vb|
         vb.cpus = "1"
         vb.memory = "1024"
