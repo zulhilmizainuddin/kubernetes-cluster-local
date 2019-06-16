@@ -45,3 +45,19 @@
     name: '{{ user }}'
     append: yes
     group: docker
+
+- name: Setup docker daemon cgroup driver
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: Create docker.service.d directory
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
