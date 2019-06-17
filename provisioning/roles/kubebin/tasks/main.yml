@@ -28,4 +28,4 @@
     update_cache: yes
 
 - name: Mark kubelet, kubeadm and kubectl as held back
-  command: sudo apt-mark hold kubelet kubeadm kubectl
+  command: apt-mark hold kubelet kubeadm kubectl

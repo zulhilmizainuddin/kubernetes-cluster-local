@@ -17,7 +17,7 @@
 #     state: present
 
 - name: Add Docker’s official GPG key
-  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   args:
     warn: no
 
@@ -55,9 +55,4 @@
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-
-- name: Restart docker
-  systemd:
-    name: docker
-    state: restarted
-    daemon_reload: yes
+  notify: Restart docker
