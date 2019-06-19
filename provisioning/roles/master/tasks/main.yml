@@ -1,0 +1,62 @@
+---
+- name: Check kubernetes control plane is running
+  shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd'
+  register: kubernetes_control_plane_pids
+  changed_when: False
+
+- name: Kubeadm init
+  command: kubeadm init --ignore-preflight-errors=all
+  register: kubeadm_init_output
+  failed_when: "KUBEADM_INIT_SUCCESS not in kubeadm_init_output.stdout"
+  when:
+    - "'kube-apiserver' not in kubernetes_control_plane_pids.stdout"
+    - "'kube-scheluder' not in kubernetes_control_plane_pids.stdout"
+    - "'kube-controller' not in kubernetes_control_plane_pids.stdout"
+    - "'kubelet' not in kubernetes_control_plane_pids.stdout"
+    - "'etcd' not in kubernetes_control_plane_pids.stdout"
+
+- name: Create kube-config directory
+  file:
+    path: /home/{{ USER }}/.kube
+    state: directory
+  register: file_output
+
+- name: Get user ID
+  command: id -u {{ USER }}
+  register: user_id_output
+  changed_when: False
+
+- name: Get group ID
+  command: id -g {{ USER }}
+  register: group_id_output
+  changed_when: False
+
+- name: Copy admin.conf to kube-config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/{{ USER }}/.kube/config
+    owner: '{{ user_id_output.stdout }}'
+    group: '{{ group_id_output.stdout }}'
+    remote_src: yes
+
+- name: Check Weave Net is running
+  shell: ps -e | grep weaver
+  register: weave_running_output
+  changed_when: False
+
+- name: Install Weave Net as pod network
+  shell: kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
+  become: yes
+  become_user: '{{ USER }}'
+  when: "'weaver' not in weave_running_output.stdout"
+
+- name: Create kubeadm join command
+  command: kubeadm token create --print-join-command
+  register: token_output
+
+- name: Cache kubeadm join command
+  set_fact:
+    kubeadm_join_command: '{{ token_output.stdout }}'
+  delegate_to: '{{ item }}'
+  delegate_facts: True
+  loop: "{{ groups['all'] }}"
