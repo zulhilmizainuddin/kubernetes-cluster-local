@@ -1,8 +1,9 @@
 ---
 - name: Check kubernetes control plane is running
-  shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd' | true
+  shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd'
   register: kubernetes_control_plane_pids
   changed_when: False
+  failed_when: False
 
 - name: Kubeadm init
   command: kubeadm init --ignore-preflight-errors=all
@@ -40,9 +41,10 @@
     remote_src: yes
 
 - name: Check Weave Net is running
-  shell: ps -e | grep weaver | true
+  shell: ps -e | grep weaver
   register: weave_running_output
   changed_when: False
+  failed_when: False
 
 - name: Install Weave Net as pod network
   shell: kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
