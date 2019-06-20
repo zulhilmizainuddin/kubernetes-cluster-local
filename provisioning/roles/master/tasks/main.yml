@@ -6,7 +6,7 @@
   failed_when: False
 
 - name: Kubeadm init
-  command: kubeadm init --ignore-preflight-errors=all
+  command: kubeadm init --apiserver-advertise-address={{ apiserver_advertise_address }} --pod-network-cidr={{ pod_network_cidr }} --ignore-preflight-errors=all 
   register: kubeadm_init_output
   failed_when: "kubeadm_init_success not in kubeadm_init_output.stdout"
   when:
@@ -40,25 +40,36 @@
     group: '{{ group_id_output.stdout }}'
     remote_src: yes
 
-- name: Check Weave Net is running
-  shell: ps -e | grep weaver
-  register: weave_running_output
+- name: Check flannel is running
+  shell: ps -e | grep flanneld
+  register: flannel_running_output
   changed_when: False
   failed_when: False
 
-- name: Install Weave Net as pod network
-  shell: kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
+- name: Install flannel as pod network
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/62e44c867a2846fefb68bd5f178daf4da3095ccb/Documentation/kube-flannel.yml
   become: yes
   become_user: '{{ user }}'
-  when: "'weaver' not in weave_running_output.stdout"
+  when: "'flanneld' not in flannel_running_output.stdout"
 
 - name: Create kubeadm join command
   command: kubeadm token create --print-join-command
   register: token_output
 
-- name: Cache kubeadm join command
-  set_fact:
-    kubeadm_join_command: '{{ token_output.stdout }}'
-  delegate_to: '{{ item }}'
-  delegate_facts: True
-  loop: "{{ groups['all'] }}"
+# - name: Cache kubeadm join command
+#   set_fact:
+#     kubeadm_join_command: '{{ token_output.stdout }}'
+#   delegate_to: '{{ item }}'
+#   delegate_facts: True
+#   loop: "{{ groups['all'] }}"
+
+- name: Cache kubeadm join command to /tmp/kubeadm-join.txt
+  copy:
+    content: '{{ token_output.stdout }}'
+    dest: /tmp/kubeadm-join.txt
+
+- name: Cache kubeadm join command to localhost /tmp/kubeadm-join.txt
+  fetch:
+    src: /tmp/kubeadm-join.txt
+    dest: /tmp/kubeadm-join.txt
+    flat: yes
