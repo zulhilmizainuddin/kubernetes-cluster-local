@@ -7,7 +7,7 @@
 - name: Kubeadm init
   command: kubeadm init --ignore-preflight-errors=all
   register: kubeadm_init_output
-  failed_when: "KUBEADM_INIT_SUCCESS not in kubeadm_init_output.stdout"
+  failed_when: "kubeadm_init_success not in kubeadm_init_output.stdout"
   when:
     - "'kube-apiserver' not in kubernetes_control_plane_pids.stdout"
     - "'kube-scheluder' not in kubernetes_control_plane_pids.stdout"
@@ -17,24 +17,24 @@
 
 - name: Create kube-config directory
   file:
-    path: /home/{{ USER }}/.kube
+    path: /home/{{ user }}/.kube
     state: directory
   register: file_output
 
 - name: Get user ID
-  command: id -u {{ USER }}
+  command: id -u {{ user }}
   register: user_id_output
   changed_when: False
 
 - name: Get group ID
-  command: id -g {{ USER }}
+  command: id -g {{ user }}
   register: group_id_output
   changed_when: False
 
 - name: Copy admin.conf to kube-config
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: /home/{{ USER }}/.kube/config
+    dest: /home/{{ user }}/.kube/config
     owner: '{{ user_id_output.stdout }}'
     group: '{{ group_id_output.stdout }}'
     remote_src: yes
@@ -47,7 +47,7 @@
 - name: Install Weave Net as pod network
   shell: kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')
   become: yes
-  become_user: '{{ USER }}'
+  become_user: '{{ user }}'
   when: "'weaver' not in weave_running_output.stdout"
 
 - name: Create kubeadm join command
