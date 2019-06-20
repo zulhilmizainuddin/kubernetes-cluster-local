@@ -1,6 +1,6 @@
 ---
 - name: Check kubernetes control plane is running
-  shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd'
+  shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd' | true
   register: kubernetes_control_plane_pids
   changed_when: False
 
@@ -40,7 +40,7 @@
     remote_src: yes
 
 - name: Check Weave Net is running
-  shell: ps -e | grep weaver
+  shell: ps -e | grep weaver | true
   register: weave_running_output
   changed_when: False
 
