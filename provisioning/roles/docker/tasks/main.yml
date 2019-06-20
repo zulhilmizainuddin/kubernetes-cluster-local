@@ -55,4 +55,9 @@
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-  notify: Restart docker
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
