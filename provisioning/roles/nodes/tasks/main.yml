@@ -1,3 +1,8 @@
 ---
+- name: Setup kubelet extra args
+  template:
+    src: kubelet_extra_args.j2
+    dest: /etc/default/kubelet
+
 - name: Join node with master
   command: "{{ lookup('file', '/tmp/kubeadm-join.txt') }}"

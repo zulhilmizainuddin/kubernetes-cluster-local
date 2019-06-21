@@ -1,4 +1,9 @@
 ---
+- name: Setup kubelet extra args
+  template:
+    src: kubelet_extra_args.j2
+    dest: /etc/default/kubelet
+
 - name: Check kubernetes control plane is running
   shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd'
   register: kubernetes_control_plane_pids
@@ -6,7 +11,7 @@
   failed_when: False
 
 - name: Kubeadm init
-  command: kubeadm init --apiserver-advertise-address={{ apiserver_advertise_address }} --pod-network-cidr={{ pod_network_cidr }} --ignore-preflight-errors=all 
+  command: kubeadm init --apiserver-advertise-address={{ apiserver_advertise_address }} --pod-network-cidr={{ pod_network_cidr }}
   register: kubeadm_init_output
   failed_when: "kubeadm_init_success not in kubeadm_init_output.stdout"
   when:
