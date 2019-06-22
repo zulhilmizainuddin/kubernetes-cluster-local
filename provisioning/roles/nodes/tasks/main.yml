@@ -4,5 +4,12 @@
     src: kubelet_extra_args.j2
     dest: /etc/default/kubelet
 
+- name: Check if kubelet is running
+  shell: ps -e | grep kubelet
+  register: kubelet_pid_output
+  changed_when: False
+  failed_when: False
+
 - name: Join node with master
   command: "{{ lookup('file', '/tmp/kubeadm-join.txt') }}"
+  when: "'kubelet' not in kubelet_pid_output.stdout"
