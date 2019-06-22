@@ -20,14 +20,13 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "provisioning/master-playbook.yml"
 
       ansible.extra_vars = {
-        private_network_ip: "192.168.33.10",
-        apiserver_advertise_address: "192.168.33.10",
-        pod_network_cidr: "10.244.0.0/16"
+        private_network_ip: "192.168.33.10"
       }
     end
   end
 
-  (1..2).each do |i|
+  NUMBER_OF_NODES = 2
+  (1..NUMBER_OF_NODES).each do |i|
     config.vm.define "node#{i}" do |node|
       node.vm.provider "virtualbox" do |vb|
         vb.cpus = "1"

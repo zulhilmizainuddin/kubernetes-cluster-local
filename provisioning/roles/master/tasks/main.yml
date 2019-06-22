@@ -11,7 +11,7 @@
   failed_when: False
 
 - name: Kubeadm init
-  command: kubeadm init --apiserver-advertise-address={{ apiserver_advertise_address }} --pod-network-cidr={{ pod_network_cidr }}
+  command: kubeadm init --apiserver-advertise-address={{ private_network_ip }} --pod-network-cidr={{ pod_network_cidr }}
   register: kubeadm_init_output
   failed_when: "kubeadm_init_success not in kubeadm_init_output.stdout"
   when:
