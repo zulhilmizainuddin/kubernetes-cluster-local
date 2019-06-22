@@ -66,20 +66,7 @@
   command: kubeadm token create --print-join-command
   register: token_output
 
-# - name: Cache kubeadm join command
-#   set_fact:
-#     kubeadm_join_command: '{{ token_output.stdout }}'
-#   delegate_to: '{{ item }}'
-#   delegate_facts: True
-#   loop: "{{ groups['all'] }}"
-
-- name: Cache kubeadm join command to /tmp/kubeadm-join.txt
-  copy:
-    content: '{{ token_output.stdout }}'
-    dest: /tmp/kubeadm-join.txt
-
-- name: Cache kubeadm join command to localhost /tmp/kubeadm-join.txt
-  fetch:
-    src: /tmp/kubeadm-join.txt
-    dest: /tmp/kubeadm-join.txt
-    flat: yes
+- name: Cache kubeadm join command
+  set_fact:
+    kubeadm_join_command: '{{ token_output.stdout }}'
+    cacheable: yes

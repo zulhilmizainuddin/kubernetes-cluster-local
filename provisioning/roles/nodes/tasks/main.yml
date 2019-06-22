@@ -11,5 +11,5 @@
   failed_when: False
 
 - name: Join node with master
-  command: "{{ lookup('file', '/tmp/kubeadm-join.txt') }}"
+  command: "{{ hostvars['master']['kubeadm_join_command'] }}"
   when: "'kubelet' not in kubelet_pid_output.stdout"
