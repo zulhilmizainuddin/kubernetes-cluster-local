@@ -20,7 +20,8 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "provisioning/master-playbook.yml"
 
       ansible.extra_vars = {
-        private_network_ip: "192.168.33.10"
+        private_network_ip: "192.168.33.10",
+        flannel_iface: "enp0s9"
       }
     end
   end
