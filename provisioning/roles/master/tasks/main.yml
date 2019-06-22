@@ -7,8 +7,8 @@
 - name: Check kubernetes control plane is running
   shell: ps -e | grep -E 'kube-apiserver|kube-scheduler|kube-controller|kubelet|etcd'
   register: kubernetes_control_plane_pids
-  changed_when: False
-  failed_when: False
+  changed_when: false
+  failed_when: false
 
 - name: Kubeadm init
   command: kubeadm init --apiserver-advertise-address={{ private_network_ip }} --pod-network-cidr={{ pod_network_cidr }}
@@ -30,12 +30,12 @@
 - name: Get user ID
   command: id -u {{ user }}
   register: user_id_output
-  changed_when: False
+  changed_when: false
 
 - name: Get group ID
   command: id -g {{ user }}
   register: group_id_output
-  changed_when: False
+  changed_when: false
 
 - name: Copy admin.conf to kube-config
   copy:
@@ -43,13 +43,13 @@
     dest: /home/{{ user }}/.kube/config
     owner: '{{ user_id_output.stdout }}'
     group: '{{ group_id_output.stdout }}'
-    remote_src: yes
+    remote_src: true
 
 - name: Check flannel is running
   shell: ps -e | grep flanneld
   register: flannel_running_output
-  changed_when: False
-  failed_when: False
+  changed_when: false
+  failed_when: false
 
 - name: Get flannel yml file
   template:
@@ -58,7 +58,7 @@
 
 - name: Install flannel as pod network
   shell: kubectl apply -f /tmp/kube-flannel.yml
-  become: yes
+  become: true
   become_user: '{{ user }}'
   when: "'flanneld' not in flannel_running_output.stdout"
 
@@ -69,4 +69,4 @@
 - name: Cache kubeadm join command
   set_fact:
     kubeadm_join_command: '{{ token_output.stdout }}'
-    cacheable: yes
+    cacheable: true

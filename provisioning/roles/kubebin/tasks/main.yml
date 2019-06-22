@@ -5,12 +5,12 @@
       - apt-transport-https
       - curl
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Add Kubernetes's GPG key
   shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
   args:
-    warn: no
+    warn: false
 
 - name: Set up main repository
   apt_repository:
@@ -25,7 +25,7 @@
       - kubeadm
       - kubectl
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Mark kubelet, kubeadm and kubectl as held back
   command: apt-mark hold kubelet kubeadm kubectl

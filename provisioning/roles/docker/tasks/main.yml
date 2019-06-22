@@ -8,7 +8,7 @@
       - gnupg-agent
       - software-properties-common
     state: present
-    update_cache: yes
+    update_cache: true
 
 # This is not working
 # - name: Add Docker’s official GPG key
@@ -19,7 +19,7 @@
 - name: Add Docker’s official GPG key
   shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   args:
-    warn: no
+    warn: false
 
 - name: Set up stable repository
   apt_repository:
@@ -33,7 +33,7 @@
       - docker-ce-cli
       - containerd.io
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Create the docker group
   group:
@@ -43,7 +43,7 @@
 - name: Add user to docker group
   user:
     name: '{{ user }}'
-    append: yes
+    append: true
     group: docker
 
 - name: Setup docker daemon cgroup driver
@@ -60,4 +60,4 @@
   systemd:
     name: docker
     state: restarted
-    daemon_reload: yes
+    daemon_reload: true
