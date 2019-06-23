@@ -10,16 +10,11 @@
     state: present
     update_cache: true
 
-# This is not working
-# - name: Add Docker’s official GPG key
-#   apt_key:
-#     url: https://download.docker.com/linux/ubuntu/gpg
-#     state: present
-
 - name: Add Docker’s official GPG key
-  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-  args:
-    warn: false
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    validate_certs: false
 
 - name: Set up stable repository
   apt_repository:

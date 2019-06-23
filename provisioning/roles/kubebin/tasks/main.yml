@@ -8,9 +8,10 @@
     update_cache: true
 
 - name: Add Kubernetes's GPG key
-  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  args:
-    warn: false
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+    validate_certs: false
 
 - name: Set up main repository
   apt_repository:
