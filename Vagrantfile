@@ -13,14 +13,16 @@ Vagrant.configure("2") do |config|
     end
 
     master.vm.hostname = "master"
-    master.vm.network "private_network", ip: "192.168.33.10"
+
+    MASTER_PRIVATE_NETWORK_IP = "192.168.33.10"
+    master.vm.network "private_network", ip: MASTER_PRIVATE_NETWORK_IP
 
     master.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/master-playbook.yml"
 
       ansible.extra_vars = {
-        private_network_ip: "192.168.33.10",
-        flannel_iface: "enp0s9"
+        private_network_ip: MASTER_PRIVATE_NETWORK_IP,
+        private_network_iface: "enp0s9"
       }
     end
   end
@@ -34,13 +36,15 @@ Vagrant.configure("2") do |config|
       end
 
       node.vm.hostname = "node#{i}"
-      node.vm.network "private_network", ip: "192.168.33.2#{i}"
+
+      node_private_network_ip = "192.168.33.2#{i}"
+      node.vm.network "private_network", ip: node_private_network_ip
 
       node.vm.provision "ansible" do |ansible|
         ansible.playbook = "provisioning/nodes-playbook.yml"
 
         ansible.extra_vars = {
-          private_network_ip: "192.168.33.2#{i}"
+          private_network_ip: node_private_network_ip
       } 
       end
     end
