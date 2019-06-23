@@ -1,5 +1,6 @@
 ---
 - hosts: master
+  become: true
   roles:
     - geerlingguy.swap
     - docker

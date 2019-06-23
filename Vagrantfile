@@ -16,7 +16,6 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: "192.168.33.10"
 
     master.vm.provision "ansible" do |ansible|
-      ansible.become = true
       ansible.playbook = "provisioning/master-playbook.yml"
 
       ansible.extra_vars = {
@@ -38,7 +37,6 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: "192.168.33.2#{i}"
 
       node.vm.provision "ansible" do |ansible|
-        ansible.become = true
         ansible.playbook = "provisioning/nodes-playbook.yml"
 
         ansible.extra_vars = {

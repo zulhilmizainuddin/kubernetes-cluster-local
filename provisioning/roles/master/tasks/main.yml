@@ -25,7 +25,8 @@
   file:
     path: /home/{{ ansible_user }}/.kube
     state: directory
-  register: file_output
+  become: true
+  become_user: '{{ ansible_user }}'
 
 - name: Get user ID
   command: id -u {{ ansible_user }}
@@ -64,9 +65,9 @@
 
 - name: Create kubeadm join command
   command: kubeadm token create --print-join-command
-  register: token_output
+  register: kubeadm_join_token_output
 
 - name: Cache kubeadm join command
   set_fact:
-    kubeadm_join_command: '{{ token_output.stdout }}'
+    kubeadm_join_command: '{{ kubeadm_join_token_output.stdout }}'
     cacheable: true
