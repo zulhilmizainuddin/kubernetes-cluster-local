@@ -3,8 +3,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "ubuntu/bionic64"
-  config.vm.network "public_network", bridge: "wlp35s0"
+  config.vm.box = "bento/ubuntu-18.04"
 
   config.vm.define "master" do |master|
     master.vm.provider "virtualbox" do |vb|
@@ -22,7 +21,7 @@ Vagrant.configure("2") do |config|
 
       ansible.extra_vars = {
         private_network_ip: MASTER_PRIVATE_NETWORK_IP,
-        private_network_iface: "enp0s9"
+        private_network_iface: "eth1"
       }
     end
   end
