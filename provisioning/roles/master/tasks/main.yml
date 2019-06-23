@@ -23,24 +23,24 @@
 
 - name: Create kube-config directory
   file:
-    path: /home/{{ user }}/.kube
+    path: /home/{{ ansible_user }}/.kube
     state: directory
   register: file_output
 
 - name: Get user ID
-  command: id -u {{ user }}
+  command: id -u {{ ansible_user }}
   register: user_id_output
   changed_when: false
 
 - name: Get group ID
-  command: id -g {{ user }}
+  command: id -g {{ ansible_user }}
   register: group_id_output
   changed_when: false
 
 - name: Copy admin.conf to kube-config
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: /home/{{ user }}/.kube/config
+    dest: /home/{{ ansible_user }}/.kube/config
     owner: '{{ user_id_output.stdout }}'
     group: '{{ group_id_output.stdout }}'
     remote_src: true
@@ -59,7 +59,7 @@
 - name: Install flannel as pod network
   shell: kubectl apply -f /tmp/kube-flannel.yml
   become: true
-  become_user: '{{ user }}'
+  become_user: '{{ ansible_user }}'
   when: "'flanneld' not in flannel_running_output.stdout"
 
 - name: Create kubeadm join command
