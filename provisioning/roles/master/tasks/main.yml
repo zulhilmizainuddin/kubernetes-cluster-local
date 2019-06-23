@@ -1,7 +1,7 @@
 ---
 - name: Setup kubelet extra args
   template:
-    src: kubelet_extra_args.j2
+    src: kubelet-extra-args.j2
     dest: /etc/default/kubelet
 
 - name: Check kubernetes control plane is running
@@ -54,7 +54,7 @@
 
 - name: Get flannel yml file
   template:
-    src: kube_flannel.j2
+    src: kube-flannel.j2
     dest: /tmp/kube-flannel.yml
 
 - name: Install flannel as pod network
