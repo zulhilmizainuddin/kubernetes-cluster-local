@@ -60,7 +60,8 @@
 - name: Install flannel as pod network
   shell: kubectl apply -f /tmp/kube-flannel.yml
   become: true
-  become_user: '{{ ansible_user }}'
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
   when: "'flanneld' not in flannel_running_output.stdout"
 
 - name: Create kubeadm join command
