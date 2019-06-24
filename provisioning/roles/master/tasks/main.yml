@@ -46,22 +46,17 @@
     group: '{{ group_id_output.stdout }}'
     remote_src: true
 
-- name: Check flannel is running
-  shell: ps -e | grep flanneld
-  register: flannel_running_output
+- name: Check weave net is running
+  shell: ps -e | grep weaver
+  register: weave_running_output
   changed_when: false
   failed_when: false
 
-- name: Get flannel yml file
-  template:
-    src: kube-flannel.j2
-    dest: /tmp/kube-flannel.yml
-
-- name: Install flannel as pod network
-  shell: kubectl apply -f /tmp/kube-flannel.yml
+- name: Install weave net as pod network
+  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
-  when: "'flanneld' not in flannel_running_output.stdout"
+  when: "'weaver' not in weave_running_output.stdout"
 
 - name: Create kubeadm join command
   command: kubeadm token create --print-join-command
