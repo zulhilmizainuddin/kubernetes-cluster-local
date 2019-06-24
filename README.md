@@ -1,6 +1,8 @@
 # kubernetes-cluster-local
 Spin up and provision multi node Kubernetes cluster locally using Vagrant, Ubuntu, Ansible and Kubeadm
 
+By default, a Kubernetes cluster with a single master and two worker nodes will be spinned up and provisioned
+
 ## Prerequisite
 Install the following components into local machine
 - Vagrant
