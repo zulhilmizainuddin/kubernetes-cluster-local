@@ -1,2 +1,3 @@
 ---
 swap_file_state: absent
+swap_file_path: /dev/mapper/vagrant--vg-swap_1
