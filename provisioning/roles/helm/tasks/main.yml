@@ -22,6 +22,6 @@
     KUBECONFIG: /etc/kubernetes/admin.conf
 
 - name: Initialize tiller
-  command: helm init --service-account tiller --history-max 10
+  command: helm init  --tiller-namespace kube-system --service-account tiller --history-max 10
   become: true
   become_user: '{{ ansible_user }}'
