@@ -3,6 +3,7 @@
   become: true
   roles:
     - geerlingguy.swap
+    - nfs
     - docker
     - kubebin
     - master

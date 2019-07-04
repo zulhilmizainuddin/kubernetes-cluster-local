@@ -1,0 +1,23 @@
+---
+- name: Install nfs server
+  apt:
+    name:
+      - nfs-kernel-server
+    state: present
+    update_cache: true
+
+- name: Create nfs share directory
+  file:
+    path: /var/nfs/kubernetes
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: '777'
+
+- name: Configure nfs exports
+  lineinfile:
+    path: /etc/exports
+    line: /var/nfs/kubernetes {{ item }}(rw,sync,no_subtree_check)
+  with_items: '{{ nfs_client_ips }}'
+  notify:
+    - Restart nfs server
