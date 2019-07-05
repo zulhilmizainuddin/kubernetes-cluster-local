@@ -22,6 +22,24 @@
     KUBECONFIG: /etc/kubernetes/admin.conf
 
 - name: Initialize tiller
-  command: helm init  --tiller-namespace kube-system --service-account tiller --history-max 10
+  command: >
+    helm init
+    --service-account tiller
+    --history-max 10
+    --node-selectors kubernetes.io/hostname=master
+    --override spec.template.spec.tolerations[0].key=node-role.kubernetes.io/master
+    --override spec.template.spec.tolerations[0].operator=Exists
+    --override spec.template.spec.tolerations[0].effect=NoSchedule
+    --wait
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: Initialize user helm client
+  command: helm init --client-only
   become: true
   become_user: '{{ ansible_user }}'
+
+- name: Helm install nfs client
+  command: helm install --set nfs.server={{ private_network_ip }} --set nfs.path=/var/nfs/kubernetes stable/nfs-client-provisioner
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
