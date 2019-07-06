@@ -3,8 +3,8 @@
   become: true
   roles:
     - geerlingguy.swap
-    - nfs
+    - nfs-server
     - docker
     - kubebin
-    - master
+    - master-config
     - helm

@@ -5,4 +5,4 @@
     - geerlingguy.swap
     - docker
     - kubebin
-    - nodes
+    - node-config
