@@ -8,3 +8,4 @@
     - kubebin
     - master-config
     - helm
+    - nfs-client
