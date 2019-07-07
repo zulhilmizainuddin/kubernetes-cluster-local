@@ -9,3 +9,4 @@
     - master-config
     - helm
     - nfs-client
+    - ingress-controller

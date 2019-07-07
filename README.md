@@ -14,6 +14,7 @@ Install the following components into local machine
 5) `tiller` will be deployed and initialized in the `master` node
 6) `NFS` server will be configured in the `master` node
 7) `NFS` client with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
+8) `nginx-ingress` will be deployed as the ingress controller
 
 ## Provision cluster
 Install roles from Ansible Galaxy
@@ -41,18 +42,58 @@ $ vagrant ssh master
 ## Deployment example
 
 ### kubectl example
-Nginx deployment
+#### Nginx deployment
+
+Deploy nginx
 ```
 $ kubectl run nginx --image=nginx --port=80 --replicas=2
-$ kubectl expose deploy nginx --type=NodePort
 ```
 
+Deploy nginx ingress resource
+```
+$ cat <<EOF | kubectl apply -f -
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: nginx-ingress
+  namespace: default
+spec:
+  rules:
+    - host: nginx.k8s.local
+      http:
+        paths:
+          - backend:
+              serviceName: nginx
+              servicePort: 80
+            path: /
+EOF
+```
+
+Set hostname resolution in /etc/hosts
+```
+$ echo "192.168.33.10    nginx.k8s.local" | sudo tee -a /etc/hosts
+```
+
+Access nginx at `http://nginx.k8s.local:<node-port>`
+
 ### helm example
-Prometheus deployment
+#### Prometheus deployment
+
+Deploy prometheus
 ```
 $ helm install \
+  --set server.ingress.enabled=true \
+  --set server.ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+  --set server.ingress.hosts={"prometheus.k8s.local"} \
   --set server.persistentVolume.storageClass=nfs-client \
-  --set alertmanager.persistentVolume.storageClass=nfs-client \
-  --set pushgateway.persistentVolume.storageClass=nfs-client \
   stable/prometheus
 ```
+
+Set hostname resolution in /etc/hosts
+```
+$ echo "192.168.33.10    prometheus.k8s.local" | sudo tee -a /etc/hosts
+```
+
+Access prometheus at `http://prometheus.k8s.local:<node-port>`

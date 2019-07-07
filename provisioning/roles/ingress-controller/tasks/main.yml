@@ -1,0 +1,5 @@
+---
+- name: Helm install nginx ingress controller
+  command: helm install stable/nginx-ingress
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
