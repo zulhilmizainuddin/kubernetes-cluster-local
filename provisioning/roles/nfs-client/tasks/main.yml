@@ -1,5 +1,11 @@
 ---
 - name: Helm install nfs client
-  command: helm install --set nfs.server={{ private_network_ip }} --set nfs.path=/var/nfs/kubernetes stable/nfs-client-provisioner
+  command: >
+    helm upgrade \
+    --install \
+    --set nfs.server={{ private_network_ip }} \
+    --set nfs.path=/var/nfs/kubernetes \
+    nfs-client \
+    stable/nfs-client-provisioner
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf

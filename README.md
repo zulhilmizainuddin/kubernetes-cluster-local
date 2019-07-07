@@ -83,11 +83,13 @@ Access nginx at `http://nginx.k8s.local:<node-port>`
 
 Deploy prometheus
 ```
-$ helm install \
+$ helm upgrade \
+  --install \
   --set server.ingress.enabled=true \
   --set server.ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
   --set server.ingress.hosts={"prometheus.k8s.local"} \
   --set server.persistentVolume.storageClass=nfs-client \
+  prometheus \
   stable/prometheus
 ```
 
