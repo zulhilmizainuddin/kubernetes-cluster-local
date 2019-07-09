@@ -1,0 +1,19 @@
+;
+; BIND reverse data file for k8s.zone
+;
+$TTL	604800
+@	IN	SOA	master.k8s.zone. root.master.k8s.zone. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	localhost.
+@	IN	A	127.0.0.1
+@	IN	AAAA	::1
+
+	IN	NS	master.k8s.zone.
+10	IN	PTR	master.k8s.zone.
+21	IN	PTR	node1.k8s.zone.
+22	IN	PTR	node2.k8s.zone.

@@ -1,0 +1,41 @@
+---
+- name: Install bind9 dns server
+  apt:
+    name:
+      - bind9
+      - bind9utils
+      - bind9-doc
+    state: present
+    update_cache: true
+
+- name: Set bind9 to ipv4 mode
+  lineinfile:
+    path: /etc/default/bind9
+    regexp: '^OPTIONS='
+    line: OPTIONS="-u bind -4"
+
+- name: Setup bind9 options file
+  template:
+    src: named.conf.options.j2
+    dest: /etc/bind/named.conf.options
+
+- name: Setup bind9 local file
+  template:
+    src: named.conf.local.j2
+    dest: /etc/bind/named.conf.local
+
+- name: Create zones directory
+  file:
+    path: /etc/bind/zones
+    state: directory
+
+- name: Setup forward zone file
+  template:
+    src: db.fwd.k8s.zone.j2
+    dest: /etc/bind/zones/db.fwd.k8s.zone
+
+- name: Setup reverse zone file
+  template:
+    src: db.rev.k8s.zone.j2
+    dest: /etc/bind/zones/db.rev.k8s.zone
+  notify: Restart bind9 server
