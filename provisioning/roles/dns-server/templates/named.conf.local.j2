@@ -7,13 +7,19 @@
 //include "/etc/bind/zones.rfc1918";
 
 zone "k8s.zone" IN {
-	type master;
-	file "/etc/bind/zones/db.fwd.k8s.zone";
-	allow-update { none; };
+    type master;
+    file "/etc/bind/zones/db.fwd.k8s.zone";
+    allow-update { none; };
 };
 
-zone "33.168.192.in-addr.arpa" IN {
-	type master;
-	file "/etc/bind/zones/db.rev.k8s.zone";
-	allow-update { none; };
+{% for node in k8s_cluster_nodes if node.id == 'master' %}
+{% set ip_octets = node.ip.split('.') %}
+
+{# zone 33.168.193-in-addr.arpa #}
+zone "{{ ip_octets[2] }}.{{ ip_octets[1] }}.{{ ip_octets[0] }}.in-addr.arpa" IN {
+    type master;
+    file "/etc/bind/zones/db.rev.k8s.zone";
+    allow-update { none; };
 };
+
+{% endfor %}

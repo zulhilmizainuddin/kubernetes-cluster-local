@@ -1,19 +1,28 @@
 ;
 ; BIND reverse data file for k8s.zone
 ;
-$TTL	604800
-@	IN	SOA	master.k8s.zone. root.master.k8s.zone. (
-			      2		; Serial
-			 604800		; Refresh
-			  86400		; Retry
-			2419200		; Expire
-			 604800 )	; Negative Cache TTL
-;
-@	IN	NS	localhost.
-@	IN	A	127.0.0.1
-@	IN	AAAA	::1
 
-	IN	NS	master.k8s.zone.
-10	IN	PTR	master.k8s.zone.
-21	IN	PTR	node1.k8s.zone.
-22	IN	PTR	node2.k8s.zone.
+$TTL	604800
+
+{% for node in k8s_cluster_nodes if node.id == 'master' %}
+@	IN	SOA	{{ node.hostname }}. root.{{ node.hostname }}. (
+                  2     ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+{% endfor %}
+
+; nameservers
+{% for node in k8s_cluster_nodes if node.id == 'master' %}
+    IN  NS  {{ node.hostname }}.
+{% endfor %}
+
+; PTR records
+{% for node in k8s_cluster_nodes %}
+{% set ip_octets = node.ip.split('.') %}
+
+{# last ip octet #}
+{{ ip_octets[3] }}  IN  PTR {{ node.hostname }}.
+
+{%- endfor %}
