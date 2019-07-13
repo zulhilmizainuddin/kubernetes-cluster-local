@@ -1,2 +1,3 @@
 .vagrant
 .cache
+provisioning/roles/geerlingguy.swap

@@ -13,17 +13,13 @@ Install the following components into local machine
 3) `kubectl` will be installed and configured in the `master` node
 4) `helm` will be installed and configured in the `master` node
 5) `tiller` will be deployed and initialized in the `master` node
-6) `NFS` server will be configured in the `master` node
-7) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
-8) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller
-9) `BIND9` `DNS` server will be installed and configured in the `master` node. All nodes will be using it as the `nameserver`
+6) `BIND9` `DNS` server will be installed and configured in the `master` node. All nodes will be using it as the `nameserver`
+7) `NFS` server will be configured in the `master` node
+8) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
+9) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller
+
 
 ## Provision cluster
-Install roles from Ansible Galaxy
-```
-$ ansible-galaxy install -r requirements.yml
-```
-
 Export Ansible environment variables for caching in your terminal
 ```
 $ export ANSIBLE_CACHE_PLUGIN=yaml

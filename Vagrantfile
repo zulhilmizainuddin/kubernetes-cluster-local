@@ -78,6 +78,11 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provisioning/dummy-playbook.yml"
+    ansible.galaxy_role_file = "requirements.yml"
+  end
+
   provision_node(config, cluster, :master)
   provision_node(config, cluster, :worker)
 
