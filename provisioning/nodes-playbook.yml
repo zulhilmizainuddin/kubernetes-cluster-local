@@ -6,3 +6,4 @@
     - docker
     - kubebin
     - node-config
+    - dns-client

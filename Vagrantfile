@@ -40,7 +40,12 @@ Vagrant.configure("2") do |config|
           :ip => "192.168.33.22"
         }
       ]
-    } 
+    },
+    :dnsserver => {
+      :hostname => "master.k8s.zone",
+      :ip => "192.168.33.10",
+      :domain => "k8s.zone"
+    }
   }
 
   def provision_node(config, cluster, role)
@@ -65,7 +70,8 @@ Vagrant.configure("2") do |config|
 
           ansible.extra_vars = {
             private_network_ip: node[:ip],
-            k8s_cluster_nodes: cluster[:master][:nodes] + cluster[:worker][:nodes]
+            k8s_cluster_nodes: cluster[:master][:nodes] + cluster[:worker][:nodes],
+            k8s_cluster_dns_server: cluster[:dnsserver]
           }
         end
       end

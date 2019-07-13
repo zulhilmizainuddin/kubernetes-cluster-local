@@ -1,0 +1,11 @@
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth1:
+      nameservers:
+        addresses:
+          - {{ k8s_cluster_dns_server.ip }}
+        search:
+          - {{ k8s_cluster_dns_server.domain }}

@@ -11,3 +11,4 @@
     - nfs-client
     - ingress-controller
     - dns-server
+    - dns-client

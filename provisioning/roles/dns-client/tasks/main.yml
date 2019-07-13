@@ -1,0 +1,6 @@
+---
+- name: Setup netplan nameserver file
+  template:
+    src: 51-vagrant-nameserver.j2
+    dest: /etc/netplan/51-vagrant-nameserver.yaml
+  notify: Apply netplan config
