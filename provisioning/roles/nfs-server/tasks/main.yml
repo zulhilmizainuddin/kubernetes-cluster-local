@@ -17,7 +17,8 @@
 - name: Configure nfs exports
   lineinfile:
     path: /etc/exports
-    line: /var/nfs/kubernetes {{ item }}(rw,sync,no_subtree_check)
-  with_items: '{{ nfs_client_ips }}'
+    line: /var/nfs/kubernetes {{ item.ip }}(rw,sync,no_subtree_check)
+  with_items: '{{ k8s_cluster_nodes }}'
+  when: item.id != 'master'
   notify:
     - Restart nfs server
