@@ -38,4 +38,8 @@
   template:
     src: db.rev.k8s.zone.j2
     dest: /etc/bind/zones/db.rev.k8s.zone
+
+- name: Validate named configuration
+  command: named-checkconf
+  changed_when: false
   notify: Restart bind9 server
