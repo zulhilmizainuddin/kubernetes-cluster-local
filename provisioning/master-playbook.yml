@@ -3,6 +3,8 @@
   become: true
   roles:
     - geerlingguy.swap
+    - dns-server
+    - dns-client
     - nfs-server
     - docker
     - kubebin
@@ -10,5 +12,3 @@
     - helm
     - nfs-client
     - ingress-controller
-    - dns-server
-    - dns-client

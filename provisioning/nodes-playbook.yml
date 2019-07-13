@@ -3,7 +3,7 @@
   become: true
   roles:
     - geerlingguy.swap
+    - dns-client
     - docker
     - kubebin
     - node-config
-    - dns-client
