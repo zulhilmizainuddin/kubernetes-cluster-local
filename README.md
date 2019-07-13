@@ -3,6 +3,7 @@ Automatically provision multi node Kubernetes cluster locally using Vagrant, Ubu
 
 ## Prerequisite
 Install the following components into local machine
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Vagrant](https://www.vagrantup.com/intro/getting-started/install.html)
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
@@ -13,8 +14,9 @@ Install the following components into local machine
 4) `helm` will be installed and configured in the `master` node
 5) `tiller` will be deployed and initialized in the `master` node
 6) `NFS` server will be configured in the `master` node
-7) `NFS` client with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
-8) `nginx-ingress` will be deployed as the ingress controller
+7) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
+8) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller
+9) `BIND9` `DNS` server will be installed and configured in the `master` node. All nodes will be using it as the `nameserver`
 
 ## Provision cluster
 Install roles from Ansible Galaxy
@@ -61,7 +63,7 @@ metadata:
   namespace: default
 spec:
   rules:
-    - host: nginx.k8s.local
+    - host: nginx.k8s.zone
       http:
         paths:
           - backend:
@@ -73,10 +75,10 @@ EOF
 
 Set hostname resolution in /etc/hosts
 ```
-$ echo "192.168.33.10    nginx.k8s.local" | sudo tee -a /etc/hosts
+$ echo "192.168.33.10    nginx.k8s.zone" | sudo tee -a /etc/hosts
 ```
 
-Access nginx at `http://nginx.k8s.local:<node-port>`
+Access nginx at `http://nginx.k8s.zone:<node-port>`
 
 ### helm example
 #### Prometheus deployment
@@ -87,7 +89,7 @@ $ helm upgrade \
   --install \
   --set server.ingress.enabled=true \
   --set server.ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
-  --set server.ingress.hosts={"prometheus.k8s.local"} \
+  --set server.ingress.hosts={"prometheus.k8s.zone"} \
   --set server.persistentVolume.storageClass=nfs-client \
   prometheus \
   stable/prometheus
@@ -95,7 +97,13 @@ $ helm upgrade \
 
 Set hostname resolution in /etc/hosts
 ```
-$ echo "192.168.33.10    prometheus.k8s.local" | sudo tee -a /etc/hosts
+$ echo "192.168.33.10    prometheus.k8s.zone" | sudo tee -a /etc/hosts
 ```
 
-Access prometheus at `http://prometheus.k8s.local:<node-port>`
+Access prometheus at `http://prometheus.k8s.zone:<node-port>`
+
+## Delete cluster
+Delete cluster when it is no longer needed
+```
+$ vagrant destroy -f
+```
