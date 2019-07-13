@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
   def provision_node(config, cluster, role)
     setup = cluster[role]
 
-    setup[:nodes].each do |node|
+    setup[:nodes].each_with_index do |node, index|
       config.vm.define node[:id] do |machine|
         
         machine.vm.box = setup[:box]
@@ -65,22 +65,22 @@ Vagrant.configure("2") do |config|
 
         machine.vm.network "private_network", ip: node[:ip]
 
-        machine.vm.provision "ansible" do |ansible|
-          ansible.playbook = setup[:ansible][:playbook]
-
-          ansible.extra_vars = {
-            private_network_ip: node[:ip],
-            k8s_cluster_nodes: cluster[:master][:nodes] + cluster[:worker][:nodes],
-            k8s_cluster_dns_server: cluster[:dnsserver]
-          }
+        if index == setup[:nodes].length - 1
+          machine.vm.provision "ansible" do |ansible|
+            ansible.playbook = setup[:ansible][:playbook]
+            ansible.galaxy_role_file = "requirements.yml"
+            ansible.limit = setup[:ansible][:limit]
+  
+            ansible.extra_vars = {
+              private_network_ip: node[:ip],
+              k8s_cluster_nodes: cluster[:master][:nodes] + cluster[:worker][:nodes],
+              k8s_cluster_dns_server: cluster[:dnsserver]
+            }
+          end
         end
+
       end
     end
-  end
-
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/dummy-playbook.yml"
-    ansible.galaxy_role_file = "requirements.yml"
   end
 
   provision_node(config, cluster, :master)
