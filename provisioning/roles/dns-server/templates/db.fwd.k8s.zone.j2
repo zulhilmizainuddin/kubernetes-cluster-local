@@ -1,22 +1,17 @@
 ;
-; BIND forward data file for k8s.zone
+; BIND forward data file for {{ k8s_cluster_dns_server.domain }}
 ;
 
 $TTL	604800
-
-{% for node in k8s_cluster_nodes if node.id == 'master' %}
-@	IN	SOA	{{ node.hostname }}. root.{{ node.hostname }}. (
+@	IN	SOA	{{ k8s_cluster_dns_server.hostname }}. root.{{ k8s_cluster_dns_server.hostname }}. (
                   2     ; Serial
              604800     ; Refresh
               86400     ; Retry
             2419200     ; Expire
              604800 )   ; Negative Cache TTL
-{% endfor %}
 
 ; nameservers
-{% for node in k8s_cluster_nodes if node.id == 'master' %}
-    IN  NS  {{ node.hostname }}.
-{% endfor %}
+    IN  NS  {{ k8s_cluster_dns_server.hostname }}.
 
 ; A records
 {% for node in k8s_cluster_nodes %}

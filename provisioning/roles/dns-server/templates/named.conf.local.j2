@@ -12,14 +12,10 @@ zone "k8s.zone" IN {
     allow-update { none; };
 };
 
-{% for node in k8s_cluster_nodes if node.id == 'master' %}
-{% set ip_octets = node.ip.split('.') %}
-
+{% set ip_octets = k8s_cluster_dns_server.ip.split('.') %}
 {# zone 33.168.193-in-addr.arpa #}
 zone "{{ ip_octets[2] }}.{{ ip_octets[1] }}.{{ ip_octets[0] }}.in-addr.arpa" IN {
     type master;
     file "/etc/bind/zones/db.rev.k8s.zone";
     allow-update { none; };
 };
-
-{% endfor %}

@@ -11,9 +11,7 @@ options {
     allow-recursion { trusted; };
 
     listen-on {
-    {% for node in k8s_cluster_nodes if node.id == 'master' %}
-        {{ node.ip }};
-    {% endfor %}
+        {{ k8s_cluster_dns_server.ip }};
     };
 
     allow-transfer { none; };
