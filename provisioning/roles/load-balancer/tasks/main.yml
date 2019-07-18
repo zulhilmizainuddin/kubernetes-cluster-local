@@ -1,0 +1,15 @@
+---
+- name: Helm install metallb load balancer
+  command: helm upgrade --install --namespace metallb-system metallb stable/metallb
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: Setup metallb configmap file
+  template:
+    src: metallb-config.j2
+    dest: /tmp/metallb-config.yml
+
+- name: Create metallb configmap
+  command: kubectl apply -f /tmp/metallb-config.yml
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf

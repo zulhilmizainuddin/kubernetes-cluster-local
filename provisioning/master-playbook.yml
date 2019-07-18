@@ -11,4 +11,5 @@
     - master-config
     - helm
     - nfs-client
+    - load-balancer
     - ingress-controller
