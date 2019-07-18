@@ -1,5 +1,18 @@
 ---
 - name: Helm install nginx ingress controller
-  command: helm upgrade --install nginx-ingress stable/nginx-ingress
+  command: >
+    helm upgrade
+    --install
+    --namespace kube-system
+    --set controller.nodeSelector."kubernetes\.io/hostname"=master
+    --set controller.tolerations[0].key=node-role.kubernetes.io/master
+    --set controller.tolerations[0].operator=Exists
+    --set controller.tolerations[0].effect=NoSchedule
+    --set defaultBackend.nodeSelector."kubernetes\.io/hostname"=master
+    --set defaultBackend.tolerations[0].key=node-role.kubernetes.io/master
+    --set defaultBackend.tolerations[0].operator=Exists
+    --set defaultBackend.tolerations[0].effect=NoSchedule
+    nginx-ingress
+    stable/nginx-ingress
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
