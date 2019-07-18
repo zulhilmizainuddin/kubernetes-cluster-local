@@ -1,13 +1,7 @@
 # kubernetes-cluster-local
 Automatically provision multi node Kubernetes cluster locally using Vagrant, Ubuntu, Ansible and Kubeadm
 
-## Prerequisite
-Install the following components into local machine
-- [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [Vagrant](https://www.vagrantup.com/intro/getting-started/install.html)
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-
-## Note
+## Features
 1) A Kubernetes cluster with a single `master` and two `worker` nodes will be provisioned
 2) `Weave Net` will be deployed as the pod network
 3) `kubectl` will be installed and configured in the `master` node
@@ -16,8 +10,14 @@ Install the following components into local machine
 6) `BIND9` `DNS` server will be installed and configured in the `master` node. All nodes will be using it as the `nameserver`
 7) `NFS` server will be configured in the `master` node
 8) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
-9) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller
+9) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller in the `master` node
+10) [`Metallb`](https://hub.helm.sh/charts/stable/metallb) load balancer will be deployed in the `master` node
 
+## Prerequisite
+Install the following components into local machine
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+- [Vagrant](https://www.vagrantup.com/intro/getting-started/install.html)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ## Provision cluster
 Export Ansible environment variables for caching in your terminal
@@ -47,6 +47,11 @@ Deploy nginx
 $ kubectl run nginx --image=nginx --port=80 --replicas=2
 ```
 
+Expose nginx deployment with `ClusterIP` service
+```
+$ kubectl expose deploy nginx --port=80
+```
+
 Deploy nginx ingress resource
 ```
 $ cat <<EOF | kubectl apply -f -
@@ -69,12 +74,18 @@ spec:
 EOF
 ```
 
-Set hostname resolution in /etc/hosts
+Get load balancer ip address
 ```
-$ echo "192.168.33.10    nginx.k8s.zone" | sudo tee -a /etc/hosts
+$ kubectl get svc -n kube-system | grep LoadBalancer | tr -s ' ' | cut -d' ' -f4
+192.168.33.240
 ```
 
-Access nginx at `http://nginx.k8s.zone:<node-port>`
+Set `nginx.k8s.zone` resolution in host machine `/etc/hosts` file
+```
+$ echo "192.168.33.240    nginx.k8s.zone" | sudo tee -a /etc/hosts
+```
+
+Access nginx at `http://nginx.k8s.zone` on host machine
 
 ### helm example
 #### Prometheus deployment
