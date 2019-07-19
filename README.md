@@ -9,7 +9,7 @@ Automatically provision multi node Kubernetes cluster locally using Vagrant, Ubu
 5) `tiller` will be deployed and initialized in the `master` node
 6) `BIND9` `DNS` server will be installed and configured in the `master` node. All nodes will be using it as the `nameserver`
 7) `NFS` server will be configured in the `master` node
-8) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed for dynamic provisioning of `PersistentVolume`s
+8) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed in the `master` node for dynamic provisioning of `PersistentVolume`s
 9) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller in the `master` node
 10) [`Metallb`](https://hub.helm.sh/charts/stable/metallb) load balancer will be deployed in the `master` node
 
