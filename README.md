@@ -102,12 +102,18 @@ $ helm upgrade \
   stable/prometheus
 ```
 
-Set hostname resolution in /etc/hosts
+Get load balancer ip address
 ```
-$ echo "192.168.33.10    prometheus.k8s.zone" | sudo tee -a /etc/hosts
+$ kubectl get svc -n kube-system | grep LoadBalancer | tr -s ' ' | cut -d' ' -f4
+192.168.33.240
 ```
 
-Access prometheus at `http://prometheus.k8s.zone:<node-port>`
+Set `prometheus.k8s.zone` resolution in host machine `/etc/hosts` file
+```
+$ echo "192.168.33.240    prometheus.k8s.zone" | sudo tee -a /etc/hosts
+```
+
+Access prometheus at `http://prometheus.k8s.zone` on host machine
 
 ## Delete cluster
 Delete cluster when it is no longer needed
