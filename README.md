@@ -98,6 +98,10 @@ $ helm upgrade \
   --set server.ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
   --set server.ingress.hosts={"prometheus.k8s.zone"} \
   --set server.persistentVolume.storageClass=nfs-client \
+  --set alertmanager.persistentVolume.storageClass=nfs-client \
+  --set nodeExporter.tolerations[0].key=node-role.kubernetes.io/master \
+  --set nodeExporter.tolerations[0].operator=Exists \
+  --set nodeExporter.tolerations[0].effect=NoSchedule \
   prometheus \
   stable/prometheus
 ```
