@@ -11,7 +11,7 @@ Automatically provision multi node Kubernetes cluster locally using Vagrant, Ubu
 7) `NFS` server will be configured in the `master` node
 8) [`NFS` client](https://hub.helm.sh/charts/stable/nfs-client-provisioner) with `StorageClass` of `nfs-client` will be deployed in the `master` node for dynamic provisioning of `PersistentVolume`s
 9) [`Nginx` ingress](https://hub.helm.sh/charts/stable/nginx-ingress) will be deployed as the ingress controller in the `master` node
-10) [`Metallb`](https://hub.helm.sh/charts/stable/metallb) load balancer will be deployed in the `master` node
+10) [`Metallb`](https://hub.helm.sh/charts/stable/metallb) load balancer will be deployed with `controller` in the `master` and `speaker` in all nodes
 
 ## Prerequisite
 Install the following components into local machine

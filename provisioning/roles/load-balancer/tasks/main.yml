@@ -8,7 +8,6 @@
     --set controller.tolerations[0].key=node-role.kubernetes.io/master
     --set controller.tolerations[0].operator=Exists
     --set controller.tolerations[0].effect=NoSchedule
-    --set speaker.nodeSelector."kubernetes\.io/hostname"=master
     --set speaker.tolerations[0].key=node-role.kubernetes.io/master
     --set speaker.tolerations[0].operator=Exists
     --set speaker.tolerations[0].effect=NoSchedule
