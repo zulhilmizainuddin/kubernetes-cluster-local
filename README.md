@@ -1,4 +1,4 @@
-# kubernetes-cluster-local
+# kubernetes-cluster-local [![Build Status](https://travis-ci.org/zulhilmizainuddin/kubernetes-cluster-local.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/kubernetes-cluster-local)
 Automatically provision multi node Kubernetes cluster locally using Vagrant, Ubuntu, Ansible and Kubeadm
 
 ## Features
