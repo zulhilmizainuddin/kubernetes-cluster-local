@@ -1,0 +1,8 @@
+---
+dist: bionic
+
+install:
+  - apt install yamllint
+
+script:
+  - yamllint .
