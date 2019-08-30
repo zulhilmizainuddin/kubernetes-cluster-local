@@ -46,6 +46,9 @@ Vagrant.configure("2") do |config|
       :ip => "192.168.33.10",
       :domain => "k8s.zone"
     },
+    :nfsserver => {
+      :ip => "192.168.33.10"
+    },
     :loadbalancer => {
       :iprange => {
         :from => "192.168.33.240",
@@ -78,9 +81,9 @@ Vagrant.configure("2") do |config|
             ansible.limit = setup[:ansible][:limit]
   
             ansible.extra_vars = {
-              private_network_ip: node[:ip],
               k8s_cluster_nodes: cluster[:master][:nodes] + cluster[:worker][:nodes],
               k8s_cluster_dns_server: cluster[:dnsserver],
+              k8s_cluster_nfs_server: cluster[:nfsserver],
               k8s_cluster_load_balancer: cluster[:loadbalancer]
             }
           end

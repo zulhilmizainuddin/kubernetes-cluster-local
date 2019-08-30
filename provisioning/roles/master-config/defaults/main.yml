@@ -1,3 +1,4 @@
 ---
 kubeadm_init_success: Your Kubernetes control-plane has initialized successfully!
 pod_network_cidr: 10.32.0.0/12
+private_network_ip: "{{ ansible_eth1['ipv4']['address'] }}"

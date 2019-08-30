@@ -8,7 +8,7 @@
     --set tolerations[0].key=node-role.kubernetes.io/master
     --set tolerations[0].operator=Exists
     --set tolerations[0].effect=NoSchedule
-    --set nfs.server={{ private_network_ip }}
+    --set nfs.server={{ k8s_cluster_nfs_server.ip }}
     --set nfs.path=/var/nfs/kubernetes
     nfs-client
     stable/nfs-client-provisioner

@@ -1,0 +1,2 @@
+---
+private_network_ip: "{{ ansible_eth1['ipv4']['address'] }}"
