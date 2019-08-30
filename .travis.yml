@@ -2,9 +2,14 @@
 dist: bionic
 sudo: required
 
+before_install:
+  - wget -O vagrant.deb https://releases.hashicorp.com/vagrant/2.2.5/vagrant_2.2.5_x86_64.deb
+
 install:
   - sudo apt-get -y update
   - sudo apt-get -y install yamllint
+  - sudo dpkg -i vagrant.deb
 
 script:
   - yamllint .
+  - vagrant validate Vagrantfile
