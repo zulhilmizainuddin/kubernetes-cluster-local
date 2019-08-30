@@ -7,9 +7,9 @@ before_install:
 
 install:
   - sudo apt-get -y update
-  - sudo apt-get -y install yamllint virtualbox
+  - sudo apt-get -y install yamllint
   - sudo dpkg -i vagrant.deb
 
 script:
   - yamllint .
-  - vagrant validate Vagrantfile
+  - vagrant validate --ignore-provider Vagrantfile
