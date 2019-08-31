@@ -1,0 +1,13 @@
+---
+- hosts: master
+  become: true
+  roles:
+    - geerlingguy.swap
+    - dns-server
+    - dns-client
+    - nfs-server
+    - master-config
+    - helm
+    - nfs-client
+    - ingress-controller
+    - load-balancer

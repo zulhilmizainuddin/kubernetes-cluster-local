@@ -1,11 +1,11 @@
 module Provision
-  def provision_node(config, cluster, role)
+  def provision_node(config, cluster, role, box_type)
     setup = cluster[role]
 
     setup[:nodes].each_with_index do |node, index|
       config.vm.define node[:id] do |machine|
         
-        machine.vm.box = setup[:box]
+        machine.vm.box = setup[:box][box_type]
 
         machine.vm.provider "virtualbox" do |vb|
           vb.cpus = setup[:cpu]
@@ -18,7 +18,7 @@ module Provision
 
         if index == setup[:nodes].length - 1
           machine.vm.provision "ansible" do |ansible|
-            ansible.playbook = setup[:ansible][:playbook]
+            ansible.playbook = setup[:ansible][:playbook][box_type]
             ansible.galaxy_role_file = "requirements.yml"
             ansible.limit = setup[:ansible][:limit]
   

@@ -8,7 +8,9 @@ include Provision
 
 Vagrant.configure("2") do |config|
 
-  provision_node(config, CLUSTER, :master)
-  provision_node(config, CLUSTER, :worker)
+  box_type = ENV['BOX_TYPE'] == 'prebuilt' ? :prebuilt : :scratch
+
+  provision_node(config, CLUSTER, :master, box_type)
+  provision_node(config, CLUSTER, :worker, box_type)
 
 end
