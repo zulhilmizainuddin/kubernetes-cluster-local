@@ -20,21 +20,26 @@ Install the following components into local machine
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ## Provision cluster
-Export Ansible environment variables for caching in your terminal
+Automatically provision multi node Kubernetes cluster from scratch using base `Vagrant` box (*Use this when you want the latest `Docker`, `Kubelet`, `Kubeadm`, `Kubectl` and `Helm`  to be installed*)
 ```
-$ export ANSIBLE_CACHE_PLUGIN=yaml
-$ export ANSIBLE_CACHE_PLUGIN_CONNECTION=.cache
+$ ./cluster.sh start
 ```
 
-Automatically provision multi node Kubernetes cluster
+or
+
+Automatically provision multi node Kubernetes cluster using a prebuilt `Vagrant` box with `Docker`, `Kubelet`, `Kubeadm`, `Kubectl` and `Helm` preinstalled (*Use this if you want subsequent cluster provisioning to be faster after a cluster teardown*)
 ```
-$ vagrant up
+$ ./cluster.sh start prebuilt
 ```
+
+Prebuilt `Vagrant` box from https://app.vagrantup.com/zulhilmizainuddin/boxes/kubernetes-ubuntu18.04 will be used
+
+Prebuilt `Vagrant` box was built using https://github.com/zulhilmizainuddin/kubernetes-vagrant-box
 
 ## SSH into master node
 SSH into master node after Kubernetes cluster provisioning has completed
 ```
-$ vagrant ssh master
+$ ./cluster.sh ssh master
 ```
 
 ## Deployment example
@@ -122,5 +127,5 @@ Access prometheus at `http://prometheus.k8s.zone` on host machine
 ## Delete cluster
 Delete cluster when it is no longer needed
 ```
-$ vagrant destroy -f
+$ ./cluster.sh delete
 ```

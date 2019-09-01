@@ -19,7 +19,6 @@ module Provision
         if index == setup[:nodes].length - 1
           machine.vm.provision "ansible" do |ansible|
             ansible.playbook = setup[:ansible][:playbook][box_type]
-            ansible.galaxy_role_file = "requirements.yml"
             ansible.limit = setup[:ansible][:limit]
   
             ansible.extra_vars = {
